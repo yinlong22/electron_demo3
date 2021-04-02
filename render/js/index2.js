@@ -3,7 +3,7 @@ const { remote } = require('electron');
 
 const rightTemplate = [
     {label:'粘贴'},
-    {label:'复制'},
+    {label:'复制', type: 'checkbox', checked: true },
 ]
 const menu = remote.Menu.buildFromTemplate(rightTemplate);
 

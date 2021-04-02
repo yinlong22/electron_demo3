@@ -1,4 +1,4 @@
-const {app, BrowserWindow, BrowserView, globalShortcut} = require("electron");
+const {app, BrowserWindow, BrowserView, globalShortcut } = require("electron");
 let mainWindow = null;
 require('./main/menu')
 
