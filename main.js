@@ -12,9 +12,10 @@ app.on("ready", () => {
             contextIsolation: false,
         },
     });
+    mainWindow.webContents.openDevTools()// 打开开发者工具
+
     // 跳转
     mainWindow.loadFile(require('path').join(__dirname, './render/index.html')).then(r => console.log(r));
-    mainWindow.webContents.openDevTools()
 
     // 注册全局快捷键
     globalShortcut.register('ctrl+y', () => {
@@ -54,5 +55,17 @@ app.on("ready", () => {
     // })
     tray.setToolTip('This is my application.') // 鼠标放上时候的提示
     tray.setContextMenu(contextMenu) // 应用菜单项
+
+    // 开始时的生命周期
+    mainWindow.setProgressBar(0.3) //进度条
+    setTimeout(() => {
+        mainWindow.setProgressBar(0.6) //进度条
+    }, 2000)
+    setTimeout(() => {
+        mainWindow.setProgressBar(0.9) //进度条
+    }, 3000)
+    setTimeout(() => {
+        mainWindow.setProgressBar(-1) //进度条
+    }, 5000)
 });
 
