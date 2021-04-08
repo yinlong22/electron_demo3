@@ -1,6 +1,9 @@
-const {app, BrowserWindow, BrowserView, globalShortcut, Menu, Tray} = require("electron");
+const {app, BrowserWindow, BrowserView, nativeTheme, ipcMain, globalShortcut, Menu, Tray} = require("electron");
 let mainWindow = null;
 require('./main/menu')
+const fs = require('fs')
+path = require("path");
+app.disableHardwareAcceleration()
 
 app.on("ready", () => {
     mainWindow = new BrowserWindow({
@@ -10,6 +13,7 @@ app.on("ready", () => {
             nodeIntegration: true,
             enableRemoteModule: true,
             contextIsolation: false,
+            // offscreen: true //离屏渲染
         },
     });
     mainWindow.webContents.openDevTools()// 打开开发者工具
@@ -67,5 +71,36 @@ app.on("ready", () => {
     setTimeout(() => {
         mainWindow.setProgressBar(-1) //进度条
     }, 5000)
-});
 
+    // 网络检测
+    ipcMain.on('online-status-changed', (event, status) => {
+        console.log(status)
+    })
+
+    // 拖拽
+    ipcMain.on('ondragstart', (event, filePath) => {
+        event.sender.startDrag({
+            file: filePath,
+            icon: './img.png'
+        })
+    })
+
+    // 离屏渲染
+    mainWindow.webContents.on('paint', (event, dirty, image) => {
+        fs.writeFileSync(path.resolve(__dirname, "ex.png"), image.toPNG()); //截屏生成一张图片
+    })
+    mainWindow.webContents.setFrameRate(60)//设置渲染的帧率
+
+    // 暗黑模式
+    ipcMain.handle('dark-mode:toggle', () => {
+        if (nativeTheme.shouldUseDarkColors) {
+            nativeTheme.themeSource = 'light'
+        } else {
+            nativeTheme.themeSource = 'dark'
+        }
+        return nativeTheme.shouldUseDarkColors
+    })
+    ipcMain.handle('dark-mode:system', () => {
+        nativeTheme.themeSource = 'system'
+    })
+});

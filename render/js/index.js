@@ -1,4 +1,3 @@
-
 // 创建新窗口
 // remote
 const BrowserWindow = require('electron').remote.BrowserWindow;

@@ -1,5 +1,6 @@
 const {Menu, BrowserWindow, app} = require("electron");
 
+// 菜单栏
 const template = [
     {
         label: "第一项",
@@ -38,6 +39,28 @@ const template = [
         ],
     },
 ];
+
+// dock栏
+const dockMenu = Menu.buildFromTemplate([
+    {
+        label: 'New Window',
+        click() {
+            console.log('New Window')
+        }
+    }, {
+        label: 'New Window with Settings',
+        submenu: [
+            {label: 'Basic'},
+            {label: 'Pro'}
+        ]
+    },
+    {label: 'New Command...'}
+])
+
+app.whenReady().then(() => {
+    app.dock.setMenu(dockMenu)
+    app.dock.setIcon('./img.png')
+})
 
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
